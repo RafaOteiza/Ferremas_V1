@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FERREMAS - E-commerce</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+    .top-bar {
+      background: #1c5d7a;
+      color: rgb(247, 246, 246);
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+      transition: transform 0.2s;
+      background: #ffffff;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .product-card img {
+      max-height: 160px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      text-align: center;
+      margin: 60px 0 30px;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    footer {
+      background-color: #1c5d7a;
+      color: white;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Top bar -->
+  <div class="top-bar text-center">
+    <span><i class="fas fa-phone-alt"></i> +56 9 1234 5678 | contacto@ferremas.cl</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#" id="logoInicio">
+        <img src="imagenes/logo.png" alt="Logo Ferremas" width="36" height="36" class="me-2" style="object-fit:contain;">
+        <span id="textoFerremas">FERREMAS</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="btnInicioNav">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="btnVerCatalogo">Catálogo</a>
+          </li>
+          <li class="nav-item d-none" id="saludoUsuarioLi">
+            <span class="badge bg-primary text-white ms-2" id="saludoUsuario"></span>
+          </li>
+          <li class="nav-item d-none" id="btnPerfilNavLi">
+            <button class="btn btn-outline-primary btn-sm ms-2" id="btnPerfilNav">
+              <i class="bi bi-person-circle"></i> Mi Perfil
+            </button>
+          </li>
+          <li class="nav-item d-none" id="btnCerrarSesionNavLi">
+            <button class="btn btn-outline-danger btn-sm ms-2" id="btnCerrarSesionNav">
+              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </button>
+          </li>
+          <li class="nav-item d-none" id="btnVerCarritoNavLi">
+            <button class="btn btn-outline-success btn-sm ms-2" id="btnVerCarritoNav">
+              <i class="bi bi-cart"></i> Ver Carrito
+              <span id="contadorCarrito" class="badge bg-danger ms-1">0</span>
+            </button>
+          </li>
+          <li class="nav-item" id="btnLoginNavLi">
+            <button class="btn btn-outline-light btn-sm ms-2" id="btnLoginNav" data-bs-toggle="modal" data-bs-target="#clienteModal">
+              <i class="fas fa-user"></i> Iniciar Sesión
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero (Carrusel de banners) -->
+  <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="imagenes/banner_1.png" class="d-block w-100" alt="Banner Trabajadores" />
+      </div>
+      <div class="carousel-item">
+        <img src="imagenes/banner_2.png" class="d-block w-100" alt="Banner Descuento Abril" />
+      </div>
+      <div class="carousel-item">
+        <img src="imagenes/banner_3.png" class="d-block w-100" alt="Banner Black Week" />
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+
+  <!-- Controles de filtrado -->
+  <section id="filtrosBusqueda" class="container my-5">
+    <h2 class="section-title">Filtrar por Categoría</h2>
+    <div id="filtrosCategoria" class="d-flex justify-content-center flex-wrap gap-2 mb-3">
+      <button class="btn btn-outline-primary active" data-categoria="todas">Todas</button>
+      <button class="btn btn-outline-primary filtro-btn" data-categoria="Herramientas Electricas">Herramientas Electricas</button>
+      <button class="btn btn-outline-primary filtro-btn" data-categoria="Herramientas Manuales">Herramientas Manuales</button>
+      <button class="btn btn-outline-primary" data-categoria="Otras">Otras</button>
+    </div>
+    <div class="input-group w-50 mx-auto">
+      <input type="text" id="buscador" class="form-control" placeholder="Buscar producto por nombre...">
+      <span class="input-group-text"><i class="fas fa-search"></i></span>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo" class="container">
+    <h2 class="section-title" id="tituloCatalogo">Catalogo de Productos</h2>
+    <div class="row g-4" id="productosContainer"></div>
+    <div class="d-flex justify-content-center mb-5">
+      <button id="verMasBtn" class="btn btn-primary">Ver más productos</button>
+    </div>
+  </section>
+
+  <section id="vistaCliente" class="container my-5" style="display:none">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="section-title mb-0">Bienvenido, <span id="clienteNombre"></span></h2>
+      <button class="btn btn-outline-danger" id="btnCerrarSesion">Cerrar Sesión</button>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-primary text-white">Datos Personales</div>
+          <div class="card-body">
+            <p><strong>Nombre:</strong> <span id="clienteNombreDatos"></span></p>
+            <p><strong>Correo:</strong> <span id="clienteCorreoDatos"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header bg-success text-white">Carrito de Compras</div>
+          <div class="card-body">
+            <ul id="clienteCarritoLista" class="list-group mb-3"></ul>
+            <h5 class="text-end">Total: <span id="clienteCarritoTotal">$0</span></h5>
+            <button class="btn btn-primary w-100" id="btnClienteConfirmarCompra">Confirmar Compra</button>
+            <div class="text-success mt-2" id="mensajeCompraExitosa"></div>
+            <div class="text-danger mt-2" id="mensajeCompraError"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="perfilUsuario" class="container mt-4 d-none">
+    <h2 class="mb-4">Mi Panel</h2>
+    <div class="row justify-content-center align-items-stretch g-4">
+      <!-- Datos personales -->
+      <div class="col-md-4">
+        <div class="bg-primary text-white rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+          <div>
+            <i class="bi bi-person-circle" style="font-size: 2.5rem;"></i>
+            <h5 class="mt-2 mb-3">Datos Personales</h5>
+            <p class="mb-1"><strong>Nombre:</strong> <span id="perfilNombre"></span></p>
+            <p class="mb-1"><strong>Correo:</strong> <span id="perfilCorreo"></span></p>
+            <p class="mb-1"><strong>Rol:</strong> <span id="perfilRol"></span></p>
+          </div>
+          <button class="btn btn-light btn-sm mt-3" id="btnCambiarPassword">
+            <i class="bi bi-key"></i> Cambiar Contraseña
+          </button>
+        </div>
+      </div>
+      <!-- Carrito -->
+      <div class="col-md-4">
+        <div class="bg-light rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+          <div>
+            <i class="bi bi-cart3 text-primary" style="font-size: 2.5rem;"></i>
+            <h5 class="mt-2 mb-3 text-primary">Carrito de Compras</h5>
+            <p class="mb-1"><strong>Total:</strong> $<span id="perfilTotalCarrito">0</span></p>
+          </div>
+          <button class="btn btn-success mt-3" id="btnFinalizarCompra">
+            <i class="bi bi-bag-check"></i> Finalizar Compra
+          </button>
+        </div>
+      </div>
+      <!-- Acciones -->
+      <div class="col-md-4">
+        <div class="bg-light rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+          <button class="btn btn-outline-primary mb-3" id="btnVerCarrito">
+            <i class="bi bi-cart"></i> Ver Carrito
+          </button>
+          <button class="btn btn-outline-secondary" id="btnVolverCatalogo">
+            &larr; Volver al Catálogo
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center py-4 mt-auto">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 FERREMAS. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal Carrito -->
+  <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="carritoModalLabel">Carrito de Compras</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="carritoLista" class="list-group mb-3"></ul>
+          <h5 class="text-end">Total: <span id="carritoTotal">$0</span></h5>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button id="vaciarCarrito" class="btn btn-outline-danger">
+            Vaciar Carrito 🗑️
+          </button>
+          <div>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Seguir Comprando</button>
+            <button class="btn btn-primary" id="btnFinalizarCompra">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación para vaciar carrito -->
+  <div class="modal fade" id="confirmarVaciarModal" tabindex="-1" aria-labelledby="confirmarVaciarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmarVaciarModalLabel">¿Vaciar Carrito?</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas eliminar todos los productos del carrito?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmarVaciarBtn">Sí, vaciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Resumen de Compra -->
+  <div class="modal fade" id="resumenCompraModal" tabindex="-1" aria-labelledby="resumenCompraLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Resumen de Compra</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="resumenLista" class="list-group mb-3"></ul>
+          <h5 class="text-end">Total: <span id="resumenTotal">$0</span></h5>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+          <button class="btn btn-success" id="btnConfirmarCompra">Confirmar Compra</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Login / Registro Cliente -->
+  <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title" id="clienteModalLabel">Bienvenido a FERREMAS</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3" id="authTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Iniciar Sesión</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="registro-tab" data-bs-toggle="tab" data-bs-target="#registro" type="button" role="tab">Registrarse</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="recuperar-tab" data-bs-toggle="tab" data-bs-target="#recuperar" type="button" role="tab">¿Olvidaste tu clave?</button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="authTabContent">
+            <!-- Iniciar Sesión -->
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <form id="formLogin">
+                <div class="mb-3">
+                  <label for="correo" class="form-label">Correo electrónico</label>
+                  <input type="email" class="form-control" id="correo" required />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="password" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                <div class="text-danger mt-2" id="mensajeLogin"></div>
+              </form>
+            </div>
+
+            <!-- Registrarse -->
+            <div class="tab-pane fade" id="registro" role="tabpanel">
+              <form id="registroForm">
+                <div class="mb-3">
+                  <label for="regNombre" class="form-label">Nombre completo</label>
+                  <input type="text" class="form-control" id="regNombre" required />
+                </div>
+                <div class="mb-3">
+                  <label for="regCorreo" class="form-label">Correo electrónico</label>
+                  <input type="email" class="form-control" id="regCorreo" required />
+                </div>
+                <div class="mb-3">
+                  <label for="regPassword" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="regPassword" required />
+                </div>
+                <button type="submit" class="btn btn-success w-100">Crear Cuenta</button>
+                <div class="text-danger mt-2" id="mensajeRegistro"></div>
+              </form>
+            </div>
+
+            <!-- Recuperar Contraseña -->
+            <div class="tab-pane fade" id="recuperar" role="tabpanel">
+              <form id="recuperarForm">
+                <div class="mb-3">
+                  <label for="recCorreo" class="form-label">Correo electrónico</label>
+                  <input type="email" class="form-control" id="recCorreo" required />
+                </div>
+                <p class="small text-muted">Te enviaremos un enlace para recuperar tu contraseña si el correo está registrado.</p>
+                <button type="submit" class="btn btn-warning w-100">Recuperar Contraseña</button>
+                <div class="text-danger mt-2" id="mensajeRecuperar"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastCarrito" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">Producto agregado al carrito</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cambiar Contraseña -->
+  <div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalCambiarPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="formCambiarPassword">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambiarPasswordLabel">Cambiar Contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="passwordActual" class="form-label">Contraseña Actual</label>
+            <input type="password" class="form-control" id="passwordActual" required>
+          </div>
+          <div class="mb-3">
+            <label for="passwordNueva" class="form-label">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="passwordNueva" required minlength="6">
+          </div>
+          <div class="mb-3">
+            <label for="passwordNueva2" class="form-label">Repetir Nueva Contraseña</label>
+            <input type="password" class="form-control" id="passwordNueva2" required minlength="6">
+          </div>
+          <div id="alertaPassword" class="alert alert-danger d-none" role="alert"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/productos.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/auth.js"></script>
+
+</body>
+</html>
+

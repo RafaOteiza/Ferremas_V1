@@ -1,0 +1,454 @@
+openapi: 3.0.0
+info:
+  title: API Ferremas
+  version: 1.0.0
+  description: API RESTful documentada con Swagger
+
+servers:
+  - url: http://127.0.0.1:4000
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Producto:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        marca:
+          type: string
+        precio:
+          type: number
+        stock:
+          type: number
+        categoria:
+          type: string
+        imagen:
+          type: string
+
+    ItemCarrito:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        precio:
+          type: number
+        cantidad:
+          type: integer
+
+    Pedido:
+      type: object
+      properties:
+        id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCarrito'
+        usuario:
+          type: object
+          properties:
+            id:
+              type: string
+            correo:
+              type: string
+            nombre:
+              type: string
+        estado:
+          type: string
+        fecha:
+          type: string
+          format: date-time
+
+    PedidoInput:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCarrito'
+
+    RegistroUsuario:
+      type: object
+      properties:
+        nombre:
+          type: string
+        correo:
+          type: string
+        password:
+          type: string
+        rol:
+          type: string
+
+    LoginUsuario:
+      type: object
+      properties:
+        correo:
+          type: string
+        password:
+          type: string
+
+    UsuarioBase:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        correo:
+          type: string
+        rol:
+          type: string
+
+paths:
+  /api/auth/registro:
+    post:
+      summary: Registrar nuevo usuario
+      tags: [Autenticación]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistroUsuario'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioBase'
+        '400':
+          description: El correo ya está registrado
+
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Autenticación]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUsuario'
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Credenciales inválidas
+
+  /api/auth/perfil:
+    get:
+      summary: Ver perfil del usuario autenticado
+      tags: [Autenticación]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Perfil del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioBase'
+        '401':
+          description: Token inválido o no enviado
+
+  /api/auth/cambiar-password:
+    post:
+      summary: Cambiar la contraseña del usuario autenticado
+      tags: [Autenticación]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                passwordActual:
+                  type: string
+                  example: "miPasswordActual"
+                passwordNueva:
+                  type: string
+                  example: "miPasswordNueva"
+      responses:
+        '200':
+          description: Contraseña actualizada con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Contraseña actualizada con éxito.
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Contraseña actual incorrecta.
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Token no proporcionado o inválido.
+
+  /api/productos:
+    get:
+      summary: Obtener todos los productos
+      tags: [Productos]
+      responses:
+        '200':
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+
+    post:
+      summary: Crear un nuevo producto
+      tags: [Productos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Producto'
+      responses:
+        '201':
+          description: Producto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+
+  /api/productos/{id}:
+    get:
+      summary: Obtener un producto por ID
+      tags: [Productos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+
+    put:
+      summary: Actualizar producto
+      tags: [Productos]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Producto'
+      responses:
+        '200':
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+
+  /api/pedidos:
+    get:
+      summary: Ver todos los pedidos registrados
+      tags: [Pedidos]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pedido'
+
+    post:
+      summary: Crear un nuevo pedido
+      tags: [Pedidos]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoInput'
+      responses:
+        '201':
+          description: Pedido creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+
+  /api/pedidos/{id}:
+    get:
+      summary: Ver detalle de un pedido específico
+      tags: [Pedidos]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalle del pedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+
+  /api/pedidos/{id}/estado:
+    put:
+      summary: Cambiar estado de un pedido
+      tags: [Pedidos]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+      responses:
+        '200':
+          description: Estado actualizado exitosamente
+
+  /api/carrito:
+    get:
+      summary: Obtener el contenido actual del carrito
+      tags: [Carrito]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Contenido actual del carrito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemCarrito'
+
+  /api/carrito/agregar:
+    post:
+      summary: Agregar producto al carrito
+      tags: [Carrito]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemCarrito'
+      responses:
+        '200':
+          description: Producto agregado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemCarrito'
+
+  /api/carrito/remover:
+    post:
+      summary: Eliminar un producto del carrito
+      tags: [Carrito]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Producto removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemCarrito'
+
+  /api/carrito/finalizar:
+    post:
+      summary: Finalizar la compra y generar un pedido
+      tags: [Carrito]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Pedido generado desde el carrito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
