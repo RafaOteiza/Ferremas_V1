@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultado del Pago - FERREMAS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <!-- Navbar solo logo -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html" id="logoInicio">
+        <img src="imagenes/logo.png" alt="Logo Ferremas" width="36" height="36" class="me-2" style="object-fit:contain;">
+        <span id="textoFerremas">FERREMAS</span>
+      </a>
+    </div>
+  </nav>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-header bg-success text-white text-center">
+            <h3>¡Pago realizado con éxito!</h3>
+          </div>
+          <div class="card-body">
+            <div id="loader" class="text-center my-4">
+              <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-2">Cargando detalles del pedido...</p>
+            </div>
+            <div id="pedido-content" style="display:none;">
+              <h5 class="mb-4 text-center">¡Gracias por tu compra! Estos son los detalles de tu pedido:</h5>
+              <ul class="list-group mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Número de pedido</strong>
+                  <span id="buyOrder"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Total pagado</strong>
+                  <span id="amount"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Código de autorización</strong>
+                  <span id="authorizationCode"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Fecha</strong>
+                  <span id="transactionDate"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Tipo de pago / entrega</strong>
+                  <span id="tipoPagoEntrega"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Últimos 4 dígitos de la tarjeta / Correo</strong>
+                  <span id="cardOrMail"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <strong>Estado del pedido</strong>
+                  <span id="status"></span>
+                </li>
+              </ul>
+              <div class="text-center">
+                <a href="cliente.html" class="btn btn-primary" id="volverPanelBtn">Volver a Mi Panel</a>
+              </div>
+            </div>
+            <div id="error-content" class="alert alert-danger mt-4" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="text-center py-4 mt-auto bg-dark">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 FERREMAS. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const pedidoId = params.get('id');
+    const errorParam = params.get('error');
+    console.log('ID de pedido recibido en URL:', pedidoId);
+    const loader = document.getElementById('loader');
+    const pedidoContent = document.getElementById('pedido-content');
+    const errorContent = document.getElementById('error-content');
+
+    if (errorParam) {
+      loader.style.display = 'none';
+      pedidoContent.style.display = 'none';
+      let mensaje = 'Ocurrió un error inesperado.';
+      if (errorParam === 'falta_token') mensaje = 'No se recibió el token de pago. Intenta nuevamente.';
+      if (errorParam === 'commit') mensaje = 'No se pudo confirmar el pago con Webpay. Intenta nuevamente o contacta soporte.';
+      if (errorParam === 'sin_buyorder') mensaje = 'No se recibió el número de pedido. Intenta nuevamente.';
+      if (errorParam === 'general') mensaje = 'Error general al procesar el pago. Intenta nuevamente.';
+      errorContent.textContent = mensaje;
+      errorContent.style.display = '';
+    } else if (pedidoId) {
+      const token = localStorage.getItem('token');
+      fetch(`/api/pedidos/${pedidoId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('No se encontró el pedido');
+          return res.json();
+        })
+        .then(data => {
+          console.log('Datos del pedido:', data);
+          document.getElementById('buyOrder').textContent = data.id || '-';
+          const total = data.total || ((data.items || []).reduce((sum, item) => sum + (item.precio * item.cantidad), 0));
+          document.getElementById('amount').textContent = total ? `$${total.toLocaleString('es-CL')}` : '-';
+          document.getElementById('authorizationCode').textContent = data.authorizationCode || '-';
+          // Fecha: prioriza fecha de pago, luego fecha de pedido
+          let fecha = data.fecha_pago || data.transactionDate || data.fecha;
+          document.getElementById('transactionDate').textContent = fecha ? new Date(fecha).toLocaleString('es-CL') : '-';
+          // Tipo de pago o entrega
+          let tipo = '-';
+          if (data.paymentType) tipo = data.paymentType;
+          else if (data.tipoEntrega === 'despacho') tipo = 'Despacho a domicilio';
+          else if (data.tipoEntrega === 'retiro_local') tipo = 'Retiro en local';
+          else if (data.tipoEntrega) tipo = data.tipoEntrega;
+          document.getElementById('tipoPagoEntrega').textContent = tipo;
+          // Últimos 4 dígitos o correo
+          let cardOrMail = '-';
+          if (data.cardNumber && data.cardNumber !== '-') cardOrMail = data.cardNumber;
+          else if (data.ultimos4 && data.ultimos4 !== '-') cardOrMail = data.ultimos4;
+          else if (data.usuario?.correo) cardOrMail = data.usuario.correo;
+          document.getElementById('cardOrMail').textContent = cardOrMail;
+          document.getElementById('status').textContent = data.estado || '-';
+          loader.style.display = 'none';
+          pedidoContent.style.display = '';
+        })
+        .catch((err) => {
+          console.log('Error al consultar el pedido:', err);
+          loader.style.display = 'none';
+          errorContent.textContent = 'No se pudo obtener la información del pedido. ' + (err.message || '');
+          errorContent.style.display = '';
+        });
+    } else {
+      loader.style.display = 'none';
+      errorContent.textContent = 'Parámetro de ID no encontrado en la URL.';
+      errorContent.style.display = '';
+    }
+
+    // Vaciar carrito al volver al panel
+    document.getElementById('volverPanelBtn').addEventListener('click', function() {
+      localStorage.removeItem('carrito');
+    });
+  </script>
+</body>
+</html> 

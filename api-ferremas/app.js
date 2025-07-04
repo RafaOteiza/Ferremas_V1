@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
 const { db } = require('./services/firebase');
+const path = require('path');
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const app = express();
 
 // ✅ Middleware global con origen permitido
 app.use(cors({
-  origin: 'http://127.0.0.1:5500' // Permitir peticiones desde Live Server (frontend)
+  origin: '*' // Permitir todos los orígenes para desarrollo/pruebas
 }));
 app.use(express.json());
 
@@ -60,8 +61,16 @@ app.use('/api/pedidos', pedidosRoutes);
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
+const webpayRoutes = require('./routes/webpay');
+app.use('/api/webpay', webpayRoutes);
+
 // 🔁 Iniciar servidor
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
+
+app.use(express.static(path.join(__dirname, '../fronted-ferremas')));

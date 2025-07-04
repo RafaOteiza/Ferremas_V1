@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intranet - Ferremas</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa; /* Mantener un fondo claro para el contenido principal */
+    }
+    .top-bar {
+      color: rgb(247, 246, 246);
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+    .intranet-content {
+      display: none; /* Ocultar por defecto */
+      margin-top: 20px; /* Espacio después de la navbar */
+      padding-bottom: 80px; /* Espacio para el footer */
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Top bar -->
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="#" id="logoIntranet">
+        <img src="imagenes/logo.png" alt="Logo Ferremas" width="36" height="36" class="me-2" style="object-fit:contain;">
+        <span>INTRANET FERREMAS</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavIntranet" title="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavIntranet">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item d-none" id="adminNavLi">
+            <a class="nav-link" href="#" id="btnGestionProductos">Gestión de Productos</a>
+          </li>
+          <li class="nav-item d-none" id="gestionUsuariosNavLi">
+            <a class="nav-link" href="#" id="btnGestionUsuarios">Gestión de Usuarios</a>
+          </li>
+          <li class="nav-item d-none" id="accountantNavLi">
+            <a class="nav-link" href="#" id="btnGestionContabilidad">Contabilidad</a>
+          </li>
+          <li class="nav-item d-none" id="warehouseNavLi">
+            <a class="nav-link" href="#" id="btnGestionBodega">Bodega</a>
+          </li>
+          <li class="nav-item d-none" id="saludoUsuarioIntranetLi">
+            <span class="badge bg-primary text-white ms-2" id="saludoUsuarioIntranet"></span>
+          </li>
+          <li class="nav-item d-none" id="btnCerrarSesionIntranetLi">
+            <button class="btn btn-outline-danger btn-sm ms-2" id="btnCerrarSesionIntranet" data-bs-toggle="modal" data-bs-target="#confirmLogoutModal">
+              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container flex-grow-1 d-flex justify-content-center align-items-center flex-column">
+    <div class="login-container" id="loginContainer">
+      <img src="imagenes/logo.png" alt="Logo Ferremas" width="80" class="d-block mx-auto mb-4">
+      <h2 class="text-center mb-4 fw-bold text-uppercase">Login Intranet</h2>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label for="username" class="form-label">Usuario</label>
+          <input type="text" class="form-control" id="username" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" class="form-control" id="password" required>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="rememberMe">
+          <label class="form-check-label" for="rememberMe">Recordarme</label>
+        </div>
+        <button type="submit" class="btn btn-secondary w-100">Ingresar</button>
+        <div id="loginMessage" class="text-danger text-center mt-3"></div>
+        <div class="text-center mt-3">
+          <a href="#" class="text-muted">¿Olvidé mi contraseña?</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="intranet-content container" id="adminPanel">
+      <h2 class="text-center mt-5">Gestión de Productos</h2>
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#productoModal" id="btnAgregarProducto">Añadir Producto</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Marca</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productosTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="intranet-content container" id="accountantPanel">
+      <h2 class="text-center mt-5">Panel de Contador</h2>
+      <p>Aquí irá la funcionalidad del Contador.</p>
+    </div>
+
+    <div class="intranet-content container" id="warehousePanel">
+      <h2 class="text-center mt-5">Panel de Bodeguero</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Estado</th>
+              <th>Tipo Entrega</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pedidosTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="intranet-content container" id="userManagementPanel">
+      <h2 class="text-center mt-5">Gestión de Usuarios</h2>
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#userModal" id="btnAgregarUsuario">Añadir Usuario</button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-4 mt-auto bg-dark">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 FERREMAS. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal para Añadir/Editar Producto -->
+  <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productoModalLabel">Añadir Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="productoForm">
+            <input type="hidden" id="productoId">
+            <div class="mb-3">
+              <label for="nombreProducto" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombreProducto" required>
+            </div>
+            <div class="mb-3">
+              <label for="categoriaProducto" class="form-label">Categoría</label>
+              <input type="text" class="form-control" id="categoriaProducto" required>
+            </div>
+            <div class="mb-3">
+              <label for="marcaProducto" class="form-label">Marca</label>
+              <input type="text" class="form-control" id="marcaProducto" required>
+            </div>
+            <div class="mb-3">
+              <label for="precioProducto" class="form-label">Precio</label>
+              <input type="number" class="form-control" id="precioProducto" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="stockProducto" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stockProducto" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Guardar Producto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Añadir/Editar Usuario -->
+  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userModalLabel">Añadir Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="userForm">
+            <input type="hidden" id="userId">
+            <div class="mb-3">
+              <label for="userName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="userName" required>
+            </div>
+            <div class="mb-3">
+              <label for="userEmail" class="form-label">Correo</label>
+              <input type="email" class="form-control" id="userEmail" required>
+            </div>
+            <div class="mb-3">
+              <label for="userPassword" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="userPassword">
+              <small class="form-text text-muted">Dejar en blanco para no cambiar la contraseña.</small>
+            </div>
+            <div class="mb-3">
+              <label for="userRole" class="form-label">Rol</label>
+              <select class="form-select" id="userRole" required>
+                <option value="" disabled selected>Seleccione un rol</option>
+                <option value="admin">Administrador</option>
+                <option value="bodeguero">Bodeguero</option>
+                <option value="contador">Contador</option>
+                <option value="vendedor">Vendedor</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Guardar Usuario</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Confirmación de Cerrar Sesión -->
+  <div class="modal fade" id="confirmLogoutModal" tabindex="-1" aria-labelledby="confirmLogoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmLogoutModalLabel">Confirmar Cierre de Sesión</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas cerrar tu sesión?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmLogoutBtn">Cerrar Sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Notificación Genérico -->
+  <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" id="notificationModalHeader">
+          <h5 class="modal-title" id="notificationModalLabel">Notificación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="notificationModalBody">
+          <!-- Contenido del mensaje aquí -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="js/bodeguero.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const rememberMeCheckbox = document.getElementById('rememberMe');
+      const loginContainer = document.getElementById('loginContainer');
+      const loginMessage = document.getElementById('loginMessage');
+      const adminPanel = document.getElementById('adminPanel');
+      const accountantPanel = document.getElementById('accountantPanel');
+      const warehousePanel = document.getElementById('warehousePanel');
+
+      // Navbar elements
+      const navbarNav = document.getElementById('navbarNavIntranet');
+      const adminNavLi = document.getElementById('adminNavLi');
+      const accountantNavLi = document.getElementById('accountantNavLi');
+      const warehouseNavLi = document.getElementById('warehouseNavLi');
+      const saludoUsuarioIntranetLi = document.getElementById('saludoUsuarioIntranetLi');
+      const saludoUsuarioIntranet = document.getElementById('saludoUsuarioIntranet');
+      const btnCerrarSesionIntranetLi = document.getElementById('btnCerrarSesionIntranetLi');
+      const btnCerrarSesionIntranet = document.getElementById('btnCerrarSesionIntranet');
+
+      // Panels (content containers)
+      const allIntranetPanels = document.querySelectorAll('.intranet-content');
+      const userManagementPanel = document.getElementById('userManagementPanel');
+      
+      const productosTableBody = document.getElementById('productosTableBody');
+      const productoModal = new bootstrap.Modal(document.getElementById('productoModal'));
+      const productoForm = document.getElementById('productoForm');
+      const productoIdInput = document.getElementById('productoId');
+      const nombreProductoInput = document.getElementById('nombreProducto');
+      const categoriaProductoInput = document.getElementById('categoriaProducto');
+      const marcaProductoInput = document.getElementById('marcaProducto');
+      const precioProductoInput = document.getElementById('precioProducto');
+      const stockProductoInput = document.getElementById('stockProducto');
+      const productoModalLabel = document.getElementById('productoModalLabel');
+      
+      const confirmLogoutModal = new bootstrap.Modal(document.getElementById('confirmLogoutModal'));
+      const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
+      // Elementos para gestión de usuarios
+      const gestionUsuariosNavLi = document.getElementById('gestionUsuariosNavLi');
+      const usersTableBody = document.getElementById('usersTableBody');
+      const btnAgregarUsuario = document.getElementById('btnAgregarUsuario');
+      const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+      const userForm = document.getElementById('userForm');
+      const userIdInput = document.getElementById('userId');
+      const userNameInput = document.getElementById('userName');
+      const userEmailInput = document.getElementById('userEmail');
+      const userPasswordInput = document.getElementById('userPassword');
+      const userRoleInput = document.getElementById('userRole');
+      const userModalLabel = document.getElementById('userModalLabel');
+
+      // Elementos del modal de notificación genérico
+      const notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+      const notificationModalHeader = document.getElementById('notificationModalHeader');
+      const notificationModalLabel = document.getElementById('notificationModalLabel');
+      const notificationModalBody = document.getElementById('notificationModalBody');
+
+      // Función para mostrar el modal de notificación
+      const showNotificationModal = (message, type = 'info') => {
+        notificationModalBody.textContent = message;
+        // Limpiar clases de color previas
+        notificationModalHeader.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+        switch (type) {
+          case 'success':
+            notificationModalHeader.classList.add('bg-success');
+            notificationModalLabel.textContent = 'Éxito';
+            break;
+          case 'danger':
+            notificationModalHeader.classList.add('bg-danger');
+            notificationModalLabel.textContent = 'Error';
+            break;
+          case 'warning':
+            notificationModalHeader.classList.add('bg-warning');
+            notificationModalLabel.textContent = 'Advertencia';
+            break;
+          default:
+            notificationModalHeader.classList.add('bg-info');
+            notificationModalLabel.textContent = 'Información';
+            break;
+        }
+        notificationModal.show();
+      };
+
+      // Función para obtener el token del localStorage
+      const getToken = () => localStorage.getItem('intranetToken');
+
+      // Función para cargar productos en la tabla desde la API
+      const cargarProductos = async () => {
+        productosTableBody.innerHTML = '';
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+          const response = await axios.get('http://127.0.0.1:4000/api/productos', config);
+          const productos = response.data;
+
+          productos.forEach(producto => {
+            const row = productosTableBody.insertRow();
+            row.innerHTML = `
+              <td>${producto.id}</td>
+              <td>${producto.nombre}</td>
+              <td>${producto.categoria}</td>
+              <td>${producto.marca}</td>
+              <td>$${producto.valor ? producto.valor.toLocaleString() : 'N/A'}</td>
+              <td>${producto.stock}</td>
+              <td>
+                <button class="btn btn-warning btn-sm editar-btn" data-id="${producto.id}">Editar</button>
+                <button class="btn btn-danger btn-sm eliminar-btn" data-id="${producto.id}">Eliminar</button>
+              </td>
+            `;
+          });
+          // Asignar event listeners a los nuevos botones
+          document.querySelectorAll('.editar-btn').forEach(button => {
+            button.addEventListener('click', (e) => editarProducto(e.target.dataset.id));
+          });
+          document.querySelectorAll('.eliminar-btn').forEach(button => {
+            button.addEventListener('click', (e) => eliminarProducto(e.target.dataset.id));
+          });
+        } catch (error) {
+          console.error('Error al cargar productos:', error);
+          showNotificationModal('Error al cargar productos. Por favor, intente de nuevo.', 'danger');
+        }
+      };
+
+      // Función para añadir/actualizar producto a través de la API
+      productoForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = productoIdInput.value;
+        const nombre = nombreProductoInput.value;
+        const categoria = categoriaProductoInput.value;
+        const marca = marcaProductoInput.value;
+        const precio = parseFloat(precioProductoInput.value);
+        const stock = parseInt(stockProductoInput.value);
+
+        const productoData = {
+          nombre,
+          categoria,
+          marca,
+          precio: [precio], // Asegurarse de enviar el precio como un array
+          stock,
+          // La imagen, fechaCreacion y valor se manejan en el backend si es necesario
+        };
+        
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+
+          if (id) {
+            // Actualizar producto existente
+            await axios.put(`http://127.0.0.1:4000/api/productos/${id}`, productoData, config);
+            showNotificationModal('Producto actualizado exitosamente!', 'success');
+          } else {
+            // Añadir nuevo producto
+            await axios.post('http://127.0.0.1:4000/api/productos', productoData, config);
+            showNotificationModal('Producto añadido exitosamente!', 'success');
+          }
+          cargarProductos();
+          productoModal.hide();
+          productoForm.reset();
+        } catch (error) {
+          console.error('Error al guardar producto:', error);
+          showNotificationModal('Error al guardar producto. Por favor, revise los datos.', 'danger');
+        }
+      });
+
+      // Función para editar producto (llenar modal)
+      const editarProducto = async (id) => {
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+          const response = await axios.get(`http://127.0.0.1:4000/api/productos/${id}`, config);
+          const producto = response.data;
+
+          if (producto) {
+            productoModalLabel.textContent = 'Editar Producto';
+            productoIdInput.value = producto.id;
+            nombreProductoInput.value = producto.nombre;
+            categoriaProductoInput.value = producto.categoria;
+            marcaProductoInput.value = producto.marca;
+            precioProductoInput.value = producto.precio[0] || 0; // Mostrar el primer precio del array
+            stockProductoInput.value = producto.stock;
+            productoModal.show();
+          }
+        } catch (error) {
+          console.error('Error al obtener producto para editar:', error);
+          showNotificationModal('Error al cargar los datos del producto para editar.', 'danger');
+        }
+      };
+
+      // Función para eliminar producto a través de la API
+      const eliminarProducto = async (id) => {
+        if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+          try {
+            const token = getToken();
+            const config = {
+              headers: { 'Authorization': `Bearer ${token}` }
+            };
+            await axios.delete(`http://127.0.0.1:4000/api/productos/${id}`, config);
+            showNotificationModal('Producto eliminado exitosamente!', 'success');
+            cargarProductos();
+          } catch (error) {
+            console.error('Error al eliminar producto:', error);
+            showNotificationModal('Error al eliminar producto. Por favor, intente de nuevo.', 'danger');
+          }
+        }
+      };
+
+      // Abrir modal para añadir producto
+      document.getElementById('btnAgregarProducto').addEventListener('click', () => {
+        productoModalLabel.textContent = 'Añadir Producto';
+        productoForm.reset();
+        productoIdInput.value = ''; // Limpiar ID oculto
+      });
+
+      // Función para cargar usuarios en la tabla desde la API
+      const cargarUsuarios = async () => {
+        usersTableBody.innerHTML = '';
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+          const response = await axios.get('http://127.0.0.1:4000/api/users', config);
+          const users = response.data;
+
+          users.forEach(user => {
+            const row = usersTableBody.insertRow();
+            row.innerHTML = `
+              <td>${user.id}</td>
+              <td>${user.nombre}</td>
+              <td>${user.correo}</td>
+              <td>${user.rol}</td>
+              <td>
+                <button class="btn btn-warning btn-sm editar-user-btn" data-id="${user.id}">Editar</button>
+                <button class="btn btn-danger btn-sm eliminar-user-btn" data-id="${user.id}">Eliminar</button>
+              </td>
+            `;
+          });
+          // Asignar event listeners a los nuevos botones
+          document.querySelectorAll('.editar-user-btn').forEach(button => {
+            button.addEventListener('click', (e) => editarUsuario(e.target.dataset.id));
+          });
+          document.querySelectorAll('.eliminar-user-btn').forEach(button => {
+            button.addEventListener('click', (e) => eliminarUsuario(e.target.dataset.id));
+          });
+        } catch (error) {
+          console.error('Error al cargar usuarios:', error);
+          showNotificationModal('Error al cargar usuarios. Por favor, intente de nuevo.', 'danger');
+        }
+      };
+
+      // Función para editar usuario (llenar modal)
+      const editarUsuario = async (id) => {
+        console.log('Editar usuario con ID:', id);
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+          const response = await axios.get(`http://127.0.0.1:4000/api/users/${id}`, config);
+          const user = response.data;
+
+          if (user) {
+            userModalLabel.textContent = 'Editar Usuario';
+            userIdInput.value = user.id;
+            userNameInput.value = user.nombre;
+            userEmailInput.value = user.correo;
+            userRoleInput.value = user.rol;
+            userPasswordInput.value = ''; // No precargar la contraseña por seguridad
+            userModal.show();
+          }
+        } catch (error) {
+          console.error('Error al obtener usuario para editar:', error);
+          showNotificationModal('Error al cargar los datos del usuario para editar.', 'danger');
+        }
+      };
+
+      // Función para eliminar usuario (se implementará más adelante)
+      const eliminarUsuario = async (id) => {
+        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+          try {
+            const token = getToken();
+            const config = {
+              headers: { 'Authorization': `Bearer ${token}` }
+            };
+            await axios.delete(`http://127.0.0.1:4000/api/users/${id}`, config);
+            showNotificationModal('Usuario eliminado exitosamente!', 'success');
+            cargarUsuarios();
+          } catch (error) {
+            console.error('Error al eliminar usuario:', error);
+            showNotificationModal('Error al eliminar usuario. Por favor, intente de nuevo.', 'danger');
+          }
+        }
+      };
+
+      // Abrir modal para añadir usuario
+      btnAgregarUsuario.addEventListener('click', () => {
+        userModalLabel.textContent = 'Añadir Usuario';
+        userForm.reset();
+        userIdInput.value = ''; // Limpiar ID oculto
+        userModal.show();
+      });
+
+      // Función para añadir/actualizar usuario a través de la API
+      userForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = userIdInput.value;
+        const nombre = userNameInput.value;
+        const correo = userEmailInput.value;
+        const password = userPasswordInput.value;
+        const rol = userRoleInput.value;
+
+        const userData = {
+          nombre,
+          correo,
+          rol,
+        };
+        if (password) { // Solo añadir la contraseña si se ha ingresado
+          userData.password = password;
+        }
+
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+
+          if (id) {
+            // Actualizar usuario existente
+            await axios.put(`http://127.0.0.1:4000/api/users/${id}`, userData, config);
+            showNotificationModal('Usuario actualizado exitosamente!', 'success');
+          } else {
+            // Añadir nuevo usuario
+            await axios.post('http://127.0.0.1:4000/api/users', userData, config);
+            showNotificationModal('Usuario añadido exitosamente!', 'success');
+          }
+          cargarUsuarios();
+          userModal.hide();
+          userForm.reset();
+        } catch (error) {
+          console.error('Error al guardar usuario:', error);
+          const errorMessage = error.response && error.response.data && error.response.data.message 
+            ? error.response.data.message : 'Error al guardar usuario. Por favor, revise los datos.';
+          showNotificationModal(errorMessage, 'danger');
+        }
+      });
+
+      // Función para cargar pedidos en la tabla
+      const cargarPedidos = async () => {
+        const pedidosTableBody = document.getElementById('pedidosTableBody');
+        pedidosTableBody.innerHTML = '';
+        try {
+          const token = getToken();
+          const config = {
+            headers: { 'Authorization': `Bearer ${token}` }
+          };
+          const response = await axios.get('http://127.0.0.1:4000/api/pedidos', config);
+          const pedidos = response.data;
+
+          pedidos.forEach(pedido => {
+            const row = pedidosTableBody.insertRow();
+            const fecha = new Date(pedido.fecha).toLocaleString();
+            row.innerHTML = `
+              <td>${pedido.id}</td>
+              <td>${fecha}</td>
+              <td>${pedido.usuario?.nombre || 'N/A'}</td>
+              <td>
+                <select class="form-select form-select-sm estado-pedido" data-id="${pedido.id}">
+                  <option value="pendiente" ${pedido.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                  <option value="en_proceso" ${pedido.estado === 'en_proceso' ? 'selected' : ''}>En Proceso</option>
+                  <option value="completado" ${pedido.estado === 'completado' ? 'selected' : ''}>Completado</option>
+                  <option value="cancelado" ${pedido.estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                </select>
+              </td>
+              <td>${pedido.tipoEntrega || 'N/A'}</td>
+              <td>
+                <button class="btn btn-info btn-sm ver-detalles" data-id="${pedido.id}">
+                  <i class="bi bi-eye"></i> Ver Detalles
+                </button>
+              </td>
+            `;
+          });
+
+          // Agregar event listeners para los cambios de estado
+          document.querySelectorAll('.estado-pedido').forEach(select => {
+            select.addEventListener('change', async (e) => {
+              const pedidoId = e.target.dataset.id;
+              const nuevoEstado = e.target.value;
+              try {
+                const token = getToken();
+                const config = {
+                  headers: { 'Authorization': `Bearer ${token}` }
+                };
+                await axios.put(`http://127.0.0.1:4000/api/pedidos/${pedidoId}/estado`, 
+                  { estado: nuevoEstado }, 
+                  config
+                );
+                showNotificationModal('Estado del pedido actualizado exitosamente', 'success');
+              } catch (error) {
+                console.error('Error al actualizar estado:', error);
+                showNotificationModal('Error al actualizar el estado del pedido', 'danger');
+                // Revertir el select al estado anterior
+                e.target.value = pedido.estado;
+              }
+            });
+          });
+
+          // Agregar event listeners para ver detalles
+          document.querySelectorAll('.ver-detalles').forEach(button => {
+            button.addEventListener('click', async (e) => {
+              const pedidoId = e.target.closest('.ver-detalles').dataset.id;
+              try {
+                const token = getToken();
+                const config = {
+                  headers: { 'Authorization': `Bearer ${token}` }
+                };
+                const response = await axios.get(`http://127.0.0.1:4000/api/pedidos/${pedidoId}`, config);
+                const pedido = response.data;
+                
+                // Mostrar detalles en el modal de notificación
+                const detallesHTML = `
+                  <h5>Detalles del Pedido ${pedido.id}</h5>
+                  <p><strong>Cliente:</strong> ${pedido.usuario?.nombre || 'N/A'}</p>
+                  <p><strong>Fecha:</strong> ${new Date(pedido.fecha).toLocaleString()}</p>
+                  <p><strong>Estado:</strong> ${pedido.estado}</p>
+                  <p><strong>Tipo de Entrega:</strong> ${pedido.tipoEntrega || 'N/A'}</p>
+                  <h6>Productos:</h6>
+                  <ul>
+                    ${pedido.items.map(item => `
+                      <li>${item.nombre} - Cantidad: ${item.cantidad} - Precio: $${item.precio}</li>
+                    `).join('')}
+                  </ul>
+                `;
+                notificationModalBody.innerHTML = detallesHTML;
+                notificationModalLabel.textContent = 'Detalles del Pedido';
+                notificationModalHeader.classList.remove('bg-success', 'bg-danger', 'bg-warning');
+                notificationModalHeader.classList.add('bg-info');
+                notificationModal.show();
+              } catch (error) {
+                console.error('Error al obtener detalles:', error);
+                showNotificationModal('Error al cargar los detalles del pedido', 'danger');
+              }
+            });
+          });
+        } catch (error) {
+          console.error('Error al cargar pedidos:', error);
+          showNotificationModal('Error al cargar los pedidos', 'danger');
+        }
+      };
+
+      // Manejo de la visibilidad de los paneles y navbar según el rol
+      const actualizarVistaIntranet = (activePanelHash, nombreUsuario, pushState = true) => {
+        // Ocultar todos los paneles de contenido
+        allIntranetPanels.forEach(panel => panel.style.display = 'none');
+        
+        // Ocultar todos los enlaces de la navbar relacionados con paneles
+        adminNavLi.classList.add('d-none');
+        accountantNavLi.classList.add('d-none');
+        warehouseNavLi.classList.add('d-none');
+        gestionUsuariosNavLi.classList.add('d-none'); 
+
+        // Siempre mostrar saludo y botón de cerrar sesión si el usuario está logueado
+        saludoUsuarioIntranetLi.classList.remove('d-none');
+        saludoUsuarioIntranet.textContent = `Hola, ${nombreUsuario || 'Usuario'}`;
+        btnCerrarSesionIntranetLi.classList.remove('d-none');
+
+        // Determinar qué enlaces de la navbar mostrar según el rol del usuario logueado
+        const userRole = localStorage.getItem('intranetUserRole');
+        if (userRole === 'admin') {
+          adminNavLi.classList.remove('d-none');
+          gestionUsuariosNavLi.classList.remove('d-none');
+        } else if (userRole === 'contador') {
+          accountantNavLi.classList.remove('d-none');
+        } else if (userRole === 'bodeguero') {
+          warehouseNavLi.classList.remove('d-none');
+        }
+
+        // Mostrar el panel activo y cargar datos si es necesario
+        switch (activePanelHash) {
+          case 'admin':
+            adminPanel.style.display = 'block';
+            cargarProductos();
+            break;
+          case 'contador':
+            accountantPanel.style.display = 'block';
+            break;
+          case 'bodeguero':
+            warehousePanel.style.display = 'block';
+            cargarPedidos();
+            break;
+          case 'users':
+            userManagementPanel.style.display = 'block';
+            cargarUsuarios();
+            break;
+          default:
+            // Fallback: Si no hay hash válido, mostrar el panel por defecto del rol del usuario
+            if (userRole === 'admin') {
+              adminPanel.style.display = 'block';
+              cargarProductos();
+            } else if (userRole === 'contador') {
+              accountantPanel.style.display = 'block';
+            } else if (userRole === 'bodeguero') {
+              warehousePanel.style.display = 'block';
+            }
+            break;
+        }
+
+        // Ocultar el contenedor de login
+        loginContainer.style.display = 'none';
+
+        // Actualizar la URL con history.pushState para reflejar el "redireccionamiento"
+        if (pushState) {
+          history.pushState(null, '', `intranet.html#${activePanelHash}`);
+        }
+      };
+
+      // Función para cerrar sesión
+      const cerrarSesionIntranet = () => {
+        localStorage.removeItem('intranetToken');
+        localStorage.removeItem('intranetUserRole'); // Opcional, si guardamos el rol
+        localStorage.removeItem('intranetUserName'); // Opcional, si guardamos el nombre
+        history.pushState(null, '', 'intranet.html'); // Volver a la URL base de intranet sin hash
+        window.location.reload(); // Recargar la página para volver al login
+      };
+
+      // Event listener para el botón de cerrar sesión en la navbar
+      btnCerrarSesionIntranet.addEventListener('click', () => {
+        confirmLogoutModal.show();
+      });
+
+      // Event listener para el botón de confirmar cierre de sesión en el modal
+      confirmLogoutBtn.addEventListener('click', () => {
+        cerrarSesionIntranet();
+        confirmLogoutModal.hide();
+      });
+
+      // Event listeners para los botones de navegación de la intranet
+      document.getElementById('btnGestionProductos').addEventListener('click', (e) => {
+        e.preventDefault(); // Evitar comportamiento por defecto del enlace
+        actualizarVistaIntranet('admin', localStorage.getItem('intranetUserName'));
+      });
+      document.getElementById('btnGestionContabilidad').addEventListener('click', (e) => {
+        e.preventDefault(); // Evitar comportamiento por defecto del enlace
+        actualizarVistaIntranet('contador', localStorage.getItem('intranetUserName'));
+      });
+      document.getElementById('btnGestionBodega').addEventListener('click', (e) => {
+        e.preventDefault(); // Evitar comportamiento por defecto del enlace
+        actualizarVistaIntranet('bodeguero', localStorage.getItem('intranetUserName'));
+      });
+      // Event listener para el botón de navegación de Gestión de Usuarios
+      document.getElementById('btnGestionUsuarios').addEventListener('click', (e) => {
+        e.preventDefault(); // Evitar comportamiento por defecto del enlace
+        actualizarVistaIntranet('users', localStorage.getItem('intranetUserName'));
+      });
+
+      // Lógica de inicio de sesión
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+
+        try {
+          const response = await axios.post('http://127.0.0.1:4000/api/auth/login', { correo: username, password });
+          const token = response.data.token; // Asumiendo que el token viene en la respuesta de login
+          localStorage.setItem('intranetToken', token); // Guardar el token para futuras solicitudes
+
+          // Si 'Recordarme' está marcado, guardar el nombre de usuario
+          if (rememberMeCheckbox.checked) {
+            localStorage.setItem('rememberedIntranetUser', username);
+          } else {
+            localStorage.removeItem('rememberedIntranetUser');
+          }
+
+          // Obtener el perfil para saber el rol y nombre
+          const perfilResponse = await axios.get('http://127.0.0.1:4000/api/auth/perfil', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          const { rol, nombre } = perfilResponse.data; // Obtener el rol y nombre del perfil
+          localStorage.setItem('intranetUserRole', rol); // Guardar el rol en localStorage
+          localStorage.setItem('intranetUserName', nombre); // Guardar el nombre en localStorage
+
+          actualizarVistaIntranet(rol, nombre);
+          loginMessage.textContent = '';
+
+        } catch (error) {
+          console.error('Error de autenticación:', error);
+          if (error.response && error.response.status === 401) {
+            loginMessage.textContent = 'Usuario o contraseña incorrectos.';
+          } else {
+            loginMessage.textContent = 'Error al conectar con el servidor. Intente de nuevo.';
+          }
+        }
+      });
+
+      // Comprobar sesión al cargar la página
+      const checkSession = async () => {
+        const token = localStorage.getItem('intranetToken');
+        const storedRole = localStorage.getItem('intranetUserRole');
+        const storedName = localStorage.getItem('intranetUserName');
+        const rememberedUser = localStorage.getItem('rememberedIntranetUser');
+
+        // Precargar el campo de usuario si está recordado
+        if (rememberedUser) {
+          usernameInput.value = rememberedUser;
+        }
+
+        if (token && storedRole && storedName) {
+          try {
+            // Verificar el token con el backend para asegurar que la sesión es válida
+            await axios.get('http://127.0.0.1:4000/api/auth/perfil', {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
+
+            // Si el token es válido, actualizar la vista con el rol y nombre almacenados
+            const hash = window.location.hash.substring(1); // Obtener el hash sin el '#'
+            if (hash && ['admin', 'contador', 'bodeguero', 'users'].includes(hash)) {
+              actualizarVistaIntranet(hash, storedName, false); // Mostrar el panel basado en el hash, sin pushState
+            } else {
+              // Si no hay hash o el hash no es válido, redirigir al panel por defecto del rol
+              actualizarVistaIntranet(storedRole, storedName, true); // Usar pushState para corregir la URL si es necesario
+            }
+
+          } catch (error) {
+            console.error('Error al verificar la sesión:', error);
+            // Limpiar localStorage y mostrar el login si la sesión es inválida
+            localStorage.removeItem('intranetToken');
+            localStorage.removeItem('intranetUserRole');
+            localStorage.removeItem('intranetUserName');
+            loginContainer.style.display = 'block';
+            history.pushState(null, '', 'intranet.html'); // Asegurar que la URL se resetee
+          }
+        } else {
+          loginContainer.style.display = 'block'; // Mostrar login si no hay token
+          history.pushState(null, '', 'intranet.html'); // Asegurar que la URL se resetee
+        }
+      };
+
+      // Manejar cambios en el hash de la URL (navegación con flechas del navegador)
+      window.addEventListener('popstate', () => {
+        const hash = window.location.hash.substring(1);
+        const storedRole = localStorage.getItem('intranetUserRole');
+        const storedName = localStorage.getItem('intranetUserName');
+        if (storedRole && storedName && ['admin', 'contador', 'bodeguero', 'users'].includes(hash)) {
+          actualizarVistaIntranet(hash, storedName, false); // No usar pushState al ir hacia atrás/adelante en el historial
+        } else if (storedRole && storedName) {
+          // Si el hash es inválido pero hay sesión, volver al rol por defecto (sin cambiar la URL si ya estamos ahí)
+          actualizarVistaIntranet(storedRole, storedName, false); // No usar pushState aquí para evitar bucles
+        } else {
+          // Si no hay sesión, asegurar que se muestre el login
+          loginContainer.style.display = 'block';
+          history.pushState(null, '', 'intranet.html'); // Asegurar que la URL se resetee
+        }
+      });
+
+      checkSession();
+    });
+  </script>
+</body>
+</html> 

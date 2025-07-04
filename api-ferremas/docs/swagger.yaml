@@ -109,6 +109,30 @@ components:
         rol:
           type: string
 
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          example: 60c72b2f9b1d8c001f8e4d7a
+        nombre:
+          type: string
+          example: Juan Pérez
+        correo:
+          type: string
+          format: email
+          example: juan.perez@ferremas.cl
+        rol:
+          type: string
+          enum: [admin, bodeguero, contador, vendedor]
+          example: bodeguero
+      required:
+        - id
+        - nombre
+        - correo
+        - rol
+
 paths:
   /api/auth/registro:
     post:
@@ -452,3 +476,170 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pedido'
+
+  /api/users:
+    get:
+      summary: Obtener todos los usuarios
+      tags: [Usuarios]
+      description: Recupera una lista de todos los usuarios registrados. Solo accesible por administradores.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Una lista de usuarios.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: No autorizado (token no proporcionado o inválido).
+        '403':
+          description: Prohibido (el usuario no tiene el rol de administrador).
+    post:
+      summary: Crear un nuevo usuario
+      tags: [Usuarios]
+      description: Crea un nuevo usuario en el sistema. Solo accesible por administradores.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - correo
+                - password
+                - rol
+              properties:
+                nombre:
+                  type: string
+                  example: Juan Pérez
+                correo:
+                  type: string
+                  format: email
+                  example: juan.perez@ferremas.cl
+                password:
+                  type: string
+                  format: password
+                  example: miContraseñaSegura123
+                rol:
+                  type: string
+                  enum: [admin, bodeguero, contador, vendedor]
+                  example: bodeguero
+      responses:
+        '201':
+          description: Usuario creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Solicitud inválida.
+        '401':
+          description: No autorizado.
+        '403':
+          description: Prohibido.
+
+  /api/users/{id}:
+    get:
+      summary: Obtener un usuario por ID
+      tags: [Usuarios]
+      description: Recupera los detalles de un usuario específico por su ID. Solo accesible por administradores.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del usuario.
+      responses:
+        '200':
+          description: Detalles del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: No autorizado.
+        '403':
+          description: Prohibido.
+        '404':
+          description: Usuario no encontrado.
+    put:
+      summary: Actualizar un usuario
+      tags: [Usuarios]
+      description: Actualiza los detalles de un usuario existente. Solo accesible por administradores.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del usuario a actualizar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Juan NuevoNombre
+                correo:
+                  type: string
+                  format: email
+                  example: nuevo.correo@ferremas.cl
+                password:
+                  type: string
+                  format: password
+                  example: nuevaContraseñaSegura456
+                rol:
+                  type: string
+                  enum: [admin, bodeguero, contador, vendedor]
+                  example: contador
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Solicitud inválida.
+        '401':
+          description: No autorizado.
+        '403':
+          description: Prohibido.
+        '404':
+          description: Usuario no encontrado.
+    delete:
+      summary: Eliminar un usuario
+      tags: [Usuarios]
+      description: Elimina un usuario del sistema por su ID. Solo accesible por administradores.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del usuario a eliminar.
+      responses:
+        '204':
+          description: Usuario eliminado exitosamente (sin contenido).
+        '401':
+          description: No autorizado.
+        '403':
+          description: Prohibido.
+        '404':
+          description: Usuario no encontrado.

@@ -1,4 +1,10 @@
-const API_URL = "http://127.0.0.1:4000/api/productos";
+function getApiUrl() {
+  const base = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+    ? 'http://127.0.0.1:4000'
+    : `http://${window.location.hostname}:4000`;
+  return `${base}/api/productos`;
+}
+
 let todosLosProductos = [];
 let productosMostrados = 0;
 const productosPorPagina = 6;
@@ -7,7 +13,10 @@ let textoBusqueda = "";
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(getApiUrl());
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     todosLosProductos = await response.json();
     aplicarFiltros();
 
@@ -17,6 +26,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     actualizarCantidadCarrito();
   } catch (error) {
     console.error("❌ Error al cargar productos:", error);
+    const errorMessageDiv = document.getElementById("productosErrorMessage");
+    if (errorMessageDiv) {
+      errorMessageDiv.textContent = "Hubo un error al cargar los productos. Por favor, intente más tarde.";
+      errorMessageDiv.classList.remove("d-none");
+    }
   }
 });
 
@@ -56,6 +70,10 @@ function mostrarProductos(productos, append = false) {
   if (!append) contenedor.innerHTML = "";
 
   productos.forEach(prod => {
+    const imagen = prod.imagen?.replace(/'/g, "\\'") || '';
+    const precio = Array.isArray(prod.precio) ? prod.precio[0] : prod.precio;
+    const idProducto = prod.id || '';
+    
     const card = document.createElement("div");
     card.className = "col-md-4 mb-4";
     card.innerHTML = `
@@ -64,8 +82,8 @@ function mostrarProductos(productos, append = false) {
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">${prod.nombre}</h5>
           <p class="card-text"><strong>Marca:</strong> ${prod.marca}</p>
-          <p class="card-text"><strong>Precio:</strong> $${prod.precio.toLocaleString()}</p>
-          <button class="btn btn-primary mt-auto" onclick="agregarAlCarrito('${prod.id}', '${prod.nombre}', ${prod.precio}, '${prod.imagen}')">Agregar al carrito</button>
+          <p class="card-text"><strong>Precio:</strong> $${precio.toLocaleString()}</p>
+          <button class="btn btn-primary mt-auto" onclick="agregarAlCarrito('${idProducto}', '${prod.nombre}', ${precio}, '${imagen}')" data-cy="add-to-cart-button">Agregar al carrito</button>
         </div>
       </div>
     `;

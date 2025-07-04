@@ -1,5 +1,4 @@
 const { db } = require('./firebase');
-const collection = db.collection('productos');
 
 // 🧠 Generar prefijo a partir de la categoría
 function obtenerPrefijoCategoria(categoria) {
@@ -13,18 +12,39 @@ function obtenerPrefijoCategoria(categoria) {
 
 // 📥 Obtener todos los productos
 exports.getAll = async () => {
+  const collection = db.collection('productos');
   const snapshot = await collection.get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      precio: Array.isArray(data.precio) ? data.precio : [data.precio],
+      fechaCreacion: data.fechaCreacion || new Date().toISOString(),
+      valor: data.valor || data.precio
+    };
+  });
 };
 
 // 🔍 Obtener producto por ID
 exports.getById = async (id) => {
+  const collection = db.collection('productos');
   const doc = await collection.doc(id).get();
-  return doc.exists ? { id: doc.id, ...doc.data() } : null;
+  if (!doc.exists) return null;
+  
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+    precio: Array.isArray(data.precio) ? data.precio : [data.precio],
+    fechaCreacion: data.fechaCreacion || new Date().toISOString(),
+    valor: data.valor || data.precio
+  };
 };
 
 // ➕ Crear nuevo producto con ID personalizado
 exports.create = async (data) => {
+  const collection = db.collection('productos');
   const prefix = obtenerPrefijoCategoria(data.categoria);
 
   // Buscar productos con el mismo prefijo
@@ -50,13 +70,22 @@ exports.create = async (data) => {
     throw new Error(`El producto con ID ${nuevoId} ya existe`);
   }
 
-  await docRef.set(data);
+  // Preparar datos con los campos requeridos
+  const productoData = {
+    ...data,
+    precio: Array.isArray(data.precio) ? data.precio : [data.precio],
+    fechaCreacion: new Date().toISOString(),
+    valor: data.valor || data.precio
+  };
+
+  await docRef.set(productoData);
   const newDoc = await docRef.get();
   return { id: newDoc.id, ...newDoc.data() };
 };
 
 // 🔄 Actualizar producto
 exports.update = async (id, data) => {
+  const collection = db.collection('productos');
   const docRef = collection.doc(id);
   const doc = await docRef.get();
 
@@ -64,12 +93,28 @@ exports.update = async (id, data) => {
     throw new Error(`Producto con ID ${id} no encontrado`);
   }
 
-  await docRef.update(data);
+  // Preparar datos con los campos requeridos
+  const productoData = {
+    ...data,
+    precio: Array.isArray(data.precio) ? data.precio : [data.precio],
+    valor: data.valor || data.precio
+  };
+
+  await docRef.update(productoData);
   const updatedDoc = await docRef.get();
   return { id: updatedDoc.id, ...updatedDoc.data() };
 };
 
 // ❌ Eliminar producto
 exports.remove = async (id) => {
-  await collection.doc(id).delete();
+  const collection = db.collection('productos');
+  const docRef = collection.doc(id);
+  const doc = await docRef.get();
+  
+  if (!doc.exists) {
+    throw new Error(`Producto con ID ${id} no encontrado`);
+  }
+  
+  await docRef.delete();
+  return { success: true };
 };

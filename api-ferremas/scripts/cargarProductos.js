@@ -4,146 +4,182 @@ const productos = [
     {
         "nombre": "Lijadora orbital eléctrica 200W",
         "marca": "BLACK+DECKER",
-        "precio": 28990,
+        "precio": [28990],
         "stock": 10,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205744/productos/lijadora_orbital_el_ctrica_200w.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205744/productos/lijadora_orbital_el_ctrica_200w.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 28990
     },
     {
         "nombre": "Taladro inalámbrico percutor + sierra circular + sierra caladora 18V",
         "marca": "BAUKER",
-        "precio": 139990,
+        "precio": [139990],
         "stock": 15,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205755/productos/tss.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205755/productos/tss.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 139990
     },
     {
         "nombre": "Motosierra eléctrica 1850W",
         "marca": "BLACK+DECKER",
-        "precio": 104990,
+        "precio": [104990],
         "stock": 7,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205747/productos/motosierra_el_ctrica_1850w.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205747/productos/motosierra_el_ctrica_1850w.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 104990
     },
     {
         "nombre": "Máquina Cosedora De Sacos Inalambrica Bateria",
         "marca": "Generica",
-        "precio": 158490,
+        "precio": [158490],
         "stock": 9,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205748/productos/m_quina_cosedora_de_sacos.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205748/productos/m_quina_cosedora_de_sacos.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 158490
     },
     {
         "nombre": "Kit Taladros Inalámbricos Percutor/Atornillador 13 mm 20V/2 Baterías",
         "marca": "UBERMANN",
-        "precio": 199990,
+        "precio": [199990],
         "stock": 21,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205743/productos/kit_taladros_inal_mbricos_percutor.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205743/productos/kit_taladros_inal_mbricos_percutor.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 199990
     },
     {
         "nombre": "Esmeril angular eléctrico 4,5\" 710 W",
         "marca": "BOSCH",
-        "precio": 36990,
+        "precio": [36990],
         "stock": 13,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205738/productos/esmeril_angular_el_ctrico_4.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205738/productos/esmeril_angular_el_ctrico_4.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 36990
     },
     {
         "nombre": "Rotomartillo eléctricto 820W 2.7",
         "marca": "BOSCH",
-        "precio": 153690,
+        "precio": [153690],
         "stock": 16,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205748/productos/rotomartillo_el_ctricto_820w.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205748/productos/rotomartillo_el_ctricto_820w.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 153690
     },
     {
         "nombre": "Atornillador 4V 29 accesorios USB",
         "marca": "BAUKER",
-        "precio": 17990,
+        "precio": [17990],
         "stock": 54,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205737/productos/atornillador_4v_29.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205737/productos/atornillador_4v_29.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 17990
     },
     {
         "nombre": "Lijadora roto orbital eléctrica 275W",
         "marca": "DEWALT",
-        "precio": 140990,
+        "precio": [140990],
         "stock": 26,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205745/productos/lijadora_roto_orbital.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205745/productos/lijadora_roto_orbital.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 140990
     },
     {
         "nombre": "Sierra circular eléctrica 7 1/4\" 1800W",
         "marca": "BAUKER",
-        "precio": 49990,
+        "precio": [49990],
         "stock": 17,
         "categoria": "Herramientas Electricas",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205754/productos/sierra_circular_el_ctrica_7.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205754/productos/sierra_circular_el_ctrica_7.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 49990
     },
     {
         "nombre": "Juego Herramientas Llave Dado Universal 45 Piezas",
         "marca": "Brooklyn",
-        "precio": 4990,
+        "precio": [4990],
         "stock": 48,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205740/productos/juego_herramientas_llave_dado_universa.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205740/productos/juego_herramientas_llave_dado_universa.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 4990
     },
     {
         "nombre": "Set de herramientas manuales acero 7 piezas",
         "marca": "REDLINE",
-        "precio": 8690,
+        "precio": [8690],
         "stock": 47,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205753/productos/set_de_herramientas_manuales_acero_7_piezas.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205753/productos/set_de_herramientas_manuales_acero_7_piezas.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 8690
     },
     {
         "nombre": "Martillo carpintero 13 Oz acero",
         "marca": "BAUKER",
-        "precio": 2890,
+        "precio": [2890],
         "stock": 100,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205745/productos/martillo_carpintero_13_oz_acero.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205745/productos/martillo_carpintero_13_oz_acero.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 2890
     },
     {
         "nombre": "Set 47 Pcs Atornillar De Alto Rendimiento",
         "marca": "AIZO",
-        "precio": 3990,
+        "precio": [3990],
         "stock": 76,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205749/productos/set_47_pcs_atornillar.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205749/productos/set_47_pcs_atornillar.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 3990
     },
     {
         "nombre": "Set De Destornilladores Toughseries 8 Pc Dwht65102",
         "marca": "DEWALT",
-        "precio": 34990,
+        "precio": [34990],
         "stock": 71,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205751/productos/set_de_destornilladores_toughseries_8.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205751/productos/set_de_destornilladores_toughseries_8.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 34990
     },
     {
         "nombre": "Kit Set Juego Destornilladores 18 Piezas Ingco Hksd1828",
         "marca": "INGCO",
-        "precio": 29990,
+        "precio": [29990],
         "stock": 45,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205741/productos/kit_set_juego_destornilladores_18.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205741/productos/kit_set_juego_destornilladores_18.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 29990
     },
     {
         "nombre": "Set 6 Broca Piloto Avellanador 5 /6 /8 /10 /12mm +llave Allen",
         "marca": "AIZO",
-        "precio": 10990,
+        "precio": [10990],
         "stock": 16,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205735/productos/6_broca_piloto_avellanador.png"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205735/productos/6_broca_piloto_avellanador.png",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 10990
     },
     {
         "nombre": "Taladro Inalámbrico Percutor 10 mm 12 V/1 Batería",
         "marca": "BAUKER",
-        "precio": 42990,
+        "precio": [42990],
         "stock": 49,
         "categoria": "Herramientas Manuales",
-        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205755/productos/taladro_inal_mbrico_percutor_10_mm.jpg"
+        "imagen": "https://res.cloudinary.com/ferrremas/image/upload/v1743205755/productos/taladro_inal_mbrico_percutor_10_mm.jpg",
+        "fechaCreacion": new Date().toISOString(),
+        "valor": 42990
     }
 ];
 

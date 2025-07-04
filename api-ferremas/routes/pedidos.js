@@ -11,11 +11,9 @@ router.get(
   pedidosController.obtenerPedidos
 );
 
-// 🔍 Ver pedido por ID (admin, vendedor, contador, bodeguero)
+// 🔍 Ver pedido por ID (acceso público)
 router.get(
   '/:id',
-  verificarToken,
-  verificarRol(['admin', 'vendedor', 'contador', 'bodeguero']),
   pedidosController.obtenerPedidoPorId
 );
 
@@ -33,6 +31,22 @@ router.put(
   verificarToken,
   verificarRol(['admin', 'vendedor']),
   pedidosController.cambiarEstadoPedido
+);
+
+// 🔄 Marcar pedido como pagado (admin)
+router.put(
+  '/:id/pagar',
+  verificarToken,
+  verificarRol(['admin']),
+  pedidosController.marcarPedidoComoPagado
+);
+
+// 🏷️ Actualizar tipo de entrega (cliente)
+router.patch(
+  '/:id/tipo-entrega',
+  verificarToken,
+  verificarRol(['cliente']),
+  pedidosController.actualizarTipoEntrega
 );
 
 module.exports = router;

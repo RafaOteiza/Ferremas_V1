@@ -3,39 +3,326 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vista Cliente - FERREMAS</title>
+  <title>Mi Perfil - FERREMAS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body { 
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .top-bar {
+      background: #1c5d7a;
+      color: rgb(247, 246, 246);
+      padding: 5px 0;
+      font-size: 0.9rem;
+    }
+    footer {
+      background-color: #1c5d7a;
+      color: white;
+      margin-top: auto;
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark">
+  <!-- Top bar -->
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">FERREMAS - Cliente</a>
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+        <img src="imagenes/logo.png" alt="Logo Ferremas" width="36" height="36" class="me-2" style="object-fit:contain;">
+        <span>FERREMAS</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Abrir menú de navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#catalogo">Catálogo</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-success btn-sm ms-2" id="btnVerCarritoNav" data-cy="cart-button">
+              <i class="bi bi-cart"></i> Ver Carrito
+              <span id="contadorCarrito" class="badge bg-danger ms-1">0</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-danger btn-sm ms-2" id="btnCerrarSesionNav" data-cy="logout-button">
+              <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 
+  <!-- Contenido Principal -->
   <div class="container mt-4">
-    <h2>Bienvenido, Cliente</h2>
-    <div class="row">
-      <div class="col-md-4">
-        <h4>Catálogo</h4>
-        <p>Ver productos disponibles.</p>
-        <a href="#" class="btn btn-outline-primary">Ir al catálogo</a>
+    <section id="perfilUsuario">
+      <h2 class="mb-4">Mi Panel</h2>
+      <div class="row justify-content-center align-items-stretch g-4">
+        <!-- Datos personales -->
+        <div class="col-md-4">
+          <div class="bg-primary text-white rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+            <div>
+              <i class="bi bi-person-circle" style="font-size: 2.5rem;"></i>
+              <h5 class="mt-2 mb-3">Datos Personales</h5>
+              <p class="mb-1"><strong>Nombre:</strong> <span id="perfilNombre"></span></p>
+              <p class="mb-1"><strong>Correo:</strong> <span id="perfilCorreo"></span></p>
+              <p class="mb-1"><strong>Rol:</strong> <span id="perfilRol"></span></p>
+            </div>
+            <button class="btn btn-light btn-sm mt-3" id="btnCambiarPassword">
+              <i class="bi bi-key"></i> Cambiar Contraseña
+            </button>
+          </div>
+        </div>
+        <!-- Carrito -->
+        <div class="col-md-4">
+          <div class="bg-light rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+            <div>
+              <i class="bi bi-cart3 text-primary" style="font-size: 2.5rem;"></i>
+              <h5 class="mt-2 mb-3 text-primary">Carrito de Compras</h5>
+              <p class="mb-1"><strong>Total:</strong> $<span id="perfilTotalCarrito">0</span></p>
+            </div>
+            <button class="btn btn-success mt-3" id="btnFinalizarCompra">
+              <i class="bi bi-bag-check"></i> Finalizar Compra
+            </button>
+          </div>
+        </div>
+        <!-- Acciones -->
+        <div class="col-md-4">
+          <div class="bg-light rounded shadow-sm p-3 text-center h-100 d-flex flex-column justify-content-between">
+            <button class="btn btn-outline-primary mb-3" id="btnVerCarrito">
+              <i class="bi bi-cart"></i> Ver Carrito
+            </button>
+            <button class="btn btn-outline-secondary" id="btnVolverCatalogo" data-cy="back-to-catalog-button">
+              &larr; Volver al Catálogo
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
-        <h4>Carrito</h4>
-        <p>Ver productos añadidos al carrito.</p>
-        <a href="#" class="btn btn-outline-secondary">Ver carrito</a>
-      </div>
-      <div class="col-md-4">
-        <h4>Opciones de Entrega</h4>
-        <p>Selecciona retiro en tienda o despacho.</p>
-        <a href="#" class="btn btn-outline-success">Elegir método</a>
-      </div>
+    </section>
+  </div>
+
+  <footer class="text-center py-4">
+    <div class="container">
+      <p class="mb-0">&copy; 2025 FERREMAS. Todos los derechos reservados.</p>
     </div>
-    <div class="mt-4">
-      <h4>Métodos de Pago</h4>
-      <p>Débito, crédito o transferencia bancaria.</p>
+  </footer>
+
+  <!-- Modal Carrito -->
+  <div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="carritoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="carritoModalLabel">Carrito de Compras</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="carritoLista" class="list-group mb-3"></ul>
+          <h5 class="text-end">Total: <span id="carritoTotal">$0</span></h5>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button id="vaciarCarrito" class="btn btn-outline-danger">
+            Vaciar Carrito 🗑️
+          </button>
+          <div>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Seguir Comprando</button>
+            <button class="btn btn-primary" id="btnFinalizarCompra" data-cy="checkout-button">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Modal de confirmación para vaciar carrito -->
+  <div class="modal fade" id="confirmarVaciarModal" tabindex="-1" aria-labelledby="confirmarVaciarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="confirmarVaciarModalLabel">¿Vaciar Carrito?</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas eliminar todos los productos del carrito?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmarVaciarBtn">Sí, vaciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Resumen de Compra -->
+  <div class="modal fade" id="resumenCompraModal" tabindex="-1" aria-labelledby="resumenCompraLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Resumen de Compra</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="resumenLista" class="list-group mb-3"></ul>
+          <h5 class="text-end">Total: <span id="resumenTotal">$0</span></h5>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+          <button class="btn btn-success" id="btnConfirmarCompra">Confirmar Compra</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cambiar Contraseña -->
+  <div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalCambiarPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="formCambiarPassword">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCambiarPasswordLabel">Cambiar Contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="passwordActual" class="form-label">Contraseña Actual</label>
+            <input type="password" class="form-control" id="passwordActual" required>
+          </div>
+          <div class="mb-3">
+            <label for="passwordNueva" class="form-label">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="passwordNueva" required minlength="6">
+          </div>
+          <div class="mb-3">
+            <label for="passwordNueva2" class="form-label">Repetir Nueva Contraseña</label>
+            <input type="password" class="form-control" id="passwordNueva2" required minlength="6">
+          </div>
+          <div id="alertaPassword" class="alert alert-danger d-none" role="alert"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast de notificación -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastCarrito" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">Producto agregado al carrito</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const usuario = JSON.parse(localStorage.getItem("usuario"));
+      if (usuario) {
+        document.getElementById("perfilNombre").textContent = usuario.nombre || '';
+        document.getElementById("perfilCorreo").textContent = usuario.correo;
+        document.getElementById("perfilRol").textContent = usuario.rol;
+
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+        document.getElementById("perfilTotalCarrito").textContent = total.toLocaleString('es-CL');
+
+      } else {
+        // Si no hay usuario logueado, redirigir a index.html
+        window.location.href = "index.html";
+      }
+
+      // Manejar el botón "Ver Carrito" en cliente.html
+      document.getElementById("btnVerCarrito")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        const carritoModal = new bootstrap.Modal(document.getElementById('carritoModal'));
+        renderizarCarrito();
+        carritoModal.show();
+      });
+
+      // Manejar el botón "Volver al Catálogo" en cliente.html
+      document.getElementById("btnVolverCatalogo")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "index.html"; // Redirige a index.html
+      });
+
+      // Actualizar el contador del carrito en la navbar al cargar la página
+      actualizarCantidadCarrito();
+    });
+
+    // Funciones del carrito (copia de carrito.js si es necesario o asegurar que carrito.js esté bien cargado)
+    // Estas funciones ya deberían estar disponibles si carrito.js se carga correctamente.
+    // Aquí solo se ponen los listeners y la lógica específica de cliente.html
+
+    // Asegurarse de que `actualizarContadorCarrito` y `renderizarProductosCarrito` estén disponibles
+    // Si auth.js y carrito.js se cargan después de este script, es posible que no lo estén.
+    // Idealmente, estas funciones se cargarían antes.
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('estado') === 'success' && params.get('orden')) {
+        // Mostrar automáticamente el modal de tipo de entrega
+        const tipoEntregaModal = new bootstrap.Modal(document.getElementById('tipoEntregaModal'));
+        tipoEntregaModal.show();
+        // Puedes guardar el ID de la orden si lo necesitas para la Fase 2
+        localStorage.setItem('pedidoId', params.get('orden'));
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Lógica para tipo de entrega tras pago exitoso
+      const btnDespacho = document.getElementById('btnDespacho');
+      const btnRetiroLocal = document.getElementById('btnRetiroLocal');
+      const tipoEntregaModal = document.getElementById('tipoEntregaModal');
+
+      async function enviarTipoEntrega(tipoEntrega) {
+        const pedidoId = localStorage.getItem('pedidoId');
+        const token = localStorage.getItem('token');
+        if (!pedidoId || !token) return;
+        try {
+          const res = await fetch(`http://127.0.0.1:4000/api/pedidos/${pedidoId}/tipo-entrega`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ tipoEntrega })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Error al guardar tipo de entrega');
+          // Confirmación visual
+          alert('¡Tipo de entrega guardado con éxito!');
+          // Cerrar modal
+          bootstrap.Modal.getInstance(tipoEntregaModal)?.hide();
+          // Limpiar pedidoId
+          localStorage.removeItem('pedidoId');
+          // Opcional: recargar o actualizar UI
+          window.location.href = 'cliente.html';
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      if (btnDespacho) {
+        btnDespacho.addEventListener('click', () => enviarTipoEntrega('despacho'));
+      }
+      if (btnRetiroLocal) {
+        btnRetiroLocal.addEventListener('click', () => enviarTipoEntrega('retiro_local'));
+      }
+    });
+  </script>
 </body>
 </html>
